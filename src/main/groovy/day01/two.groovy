@@ -1,7 +1,9 @@
 package day01
 
+import org.codehaus.groovy.tools.groovydoc.ClasspathResourceManager
+
 def ls = [[], []]
-System.in.splitEachLine(~/   /) { ss ->
+new ClasspathResourceManager().getInputStream('day01/input').splitEachLine(~/   /) { ss ->
     ss.eachWithIndex { it, index ->
         ls[index].add(it as int)
     }

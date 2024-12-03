@@ -1,7 +1,9 @@
 package day01
 
+import org.codehaus.groovy.tools.groovydoc.ClasspathResourceManager
+
 def qs = [new PriorityQueue(), new PriorityQueue() ]
-System.in.splitEachLine(~/   /) { ss ->
+new ClasspathResourceManager().getInputStream('day01/input').splitEachLine(~/   /) { ss ->
     ss.eachWithIndex { it, index ->
         qs[index].offer( it as int)
     }

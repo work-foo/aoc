@@ -1,8 +1,10 @@
 package day02
 
+import org.codehaus.groovy.tools.groovydoc.ClasspathResourceManager
+
 int acc = 0;
 
-System.in.splitEachLine(~/ /) { ss ->
+new ClasspathResourceManager().getInputStream('day02/input').splitEachLine(~/ /) { ss ->
     def ns = ss.collect {it as int}
 
     if (gradual(ns) ||  deletions(ns).any(this::gradual)) {
