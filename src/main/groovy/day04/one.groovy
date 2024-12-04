@@ -1,11 +1,11 @@
 package day04
 
-import groovy.transform.Field
+
 import org.codehaus.groovy.tools.groovydoc.ClasspathResourceManager
 
 long acc = 0
 
-@Field String xmas = 'XMAS', smax = xmas.reverse();
+String xmas = 'XMAS', smax = xmas.reverse();
 
 def manager = new ClasspathResourceManager()
 def resource = manager.getInputStream('day04/input')
@@ -41,17 +41,16 @@ List<String> backslash =
     }.toString()
 }
 
-acc = [lines, transposedLines, backslash, slash].sum { count_xmas_smax(it)}
+acc = [lines, transposedLines, backslash, slash].sum { liness ->
+    liness.sum { line ->
+        [xmas, smax].sum {string -> (line =~ string).getCount()}
+    }
+}
 
 
 System.out.withPrintWriter { pw ->
     pw.println(acc)
 }
 
-def count_xmas_smax(List<String> lines) {
-    lines.sum {
-        (it =~ xmas).getCount() + (it =~ smax).getCount()
-    } as int
-}
 
 acc
