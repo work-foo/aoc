@@ -1,8 +1,8 @@
 package day05
 
-
 import org.codehaus.groovy.tools.groovydoc.ClasspathResourceManager
 
+boolean[] expected = [true, true, true, false, false, false]
 long acc = 0
 
 String xmas = 'XMAS', smax = xmas.reverse();
