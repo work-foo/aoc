@@ -41,11 +41,9 @@ List<String> backslash =
     }.toString()
 }
 
-acc = [lines, transposedLines, backslash, slash].sum { liness ->
-    liness.sum { line ->
+acc = [lines, transposedLines, backslash, slash].flatten().sum { line ->
         [xmas, smax].sum {string -> (line =~ string).getCount()}
     }
-}
 
 
 System.out.withPrintWriter { pw ->
