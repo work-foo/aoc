@@ -9,9 +9,9 @@ import java.util.stream.Stream
 long acc
 
 def manager = new ClasspathResourceManager()
-//def resource = manager.getInputStream('day08/test') //34
+def resource = manager.getInputStream('day08/test') //34
 //def resource = manager.getInputStream('day08/test2') //9
-def resource = manager.getInputStream('day08/input')
+//def resource = manager.getInputStream('day08/input')
 // right left
 def lines = resource.readLines()
 def chars = lines*.toCharArray() as char[][]
@@ -39,8 +39,6 @@ def nodes = GQ {
     join j in s on i.c() == j.c() && i.p() != j.p()
     select antinode(i,j)
 }.stream().reduce([] as Set, {accset, l -> accset.addAll(l); accset}, {sa, sb -> sa + sb} )
-
-nodes.addAll(s*.p())
 
 acc = nodes.size()
 
