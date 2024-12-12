@@ -9,9 +9,9 @@ import java.util.regex.Pattern
 long acc
 
 def manager = new ClasspathResourceManager()
-//def resource = manager.getInputStream('day10/test') /* 0099811188827773336446555566 */ ;def expected = 1928
+def resource = manager.getInputStream('day10/test') /* 0099811188827773336446555566 */ ;def expected = 1928
 //def resource = manager.getInputStream('day10/test2'); /* 022111222 */ def expected = 60
-def resource = manager.getInputStream('day10/input'); def expected = 6395800119709
+//def resource = manager.getInputStream('day10/input'); def expected = 6395800119709
 def text = resource.getText()
 
 
