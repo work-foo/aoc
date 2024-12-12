@@ -23,6 +23,13 @@ record Position(int down, int right) {
     static Position of(State state) {
         new Position(state.down, state.right)
     }
+
+    Position plus(Position a) {
+        new Position(down + a.down(), right + a.right())
+    }
+    Position minus(Position a) {
+        new Position(down - a.down(), right - a.right())
+    }
 }
 
 class State {
