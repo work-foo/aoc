@@ -30,6 +30,9 @@ record Position(int down, int right) {
     Position minus(Position a) {
         new Position(down - a.down(), right - a.right())
     }
+    Position scale(int s) {
+        new Position(down * s, right * s)
+    }
 }
 
 class State {
