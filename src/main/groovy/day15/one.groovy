@@ -1,6 +1,6 @@
 package day15
 
-import com.google.common.graph.Traverser
+
 import org.codehaus.groovy.tools.groovydoc.ClasspathResourceManager
 
 long acc
@@ -8,58 +8,65 @@ long acc
 def manager = new ClasspathResourceManager()
 //def resource = manager.getInputStream('day15/test')  ;def expected = 2028
 //def resource = manager.getInputStream('day15/test2') ;def expected = 10092
-def resource = manager.getInputStream('day15/input'); def expected = 193899
+def resource = manager.getInputStream('day15/input'); def expected = 1294459
 def lines = resource.readLines()
-char[][] chars = lines*.toCharArray() as char[][]
-def depth = lines.size(), width = lines[0].length()
+int blank = lines.findIndexOf {it.empty}
+
+def maze = lines.take(blank)
+def input = lines.subList(blank+1, lines.size())
+
+char[][] chars = maze*.toCharArray() as char[][]
+input = input.join('')
+def depth = chars.length, width = chars[0].length
 def onboard = { d, r -> d in 0..<depth && r in 0..<width }
 
-record Node(int down, int right, char ch) {}
 
-def nodes = [] as HashSet
-lines.eachWithIndex { String line, int d ->
-    line.toCharArray().eachWithIndex { char ch, int r ->
-        nodes << new Node(d,r,ch)
+// robot position
+int rr, rd =
+        chars.findIndexOf {
+            rr = it.findIndexOf { it == '@'}
+            rr > -1
+        }
+
+// recursive call requires definition
+def push;
+push = { wd, wr, fd, fr ->
+//    intended
+    def (id, ir) = [wd + fd,wr + fr]
+    def what = chars[id][ir]
+    def wall = what == '#'
+    def empty = what == '.'
+
+    def robot = chars[wd][wr] == '@'
+    if (wall) {
+        return false
+    } else if (empty || push(id, ir, fd, fr)) { // if empty, or can push next in line (make empty)
+        chars[id][ir] = chars[wd][wr] // move where to intended
+        chars[wd][wr] = '.' // clear where
+        if (robot) { // if was robot, note the new position
+            rd = id
+            rr = ir
+        }
+        return true
     }
 }
-
-HashSet<Node> q = new HashSet<Node>(nodes)
-def successor = { Node n ->
-    def adja = [-1, 1]*.plus(n.down()).collect { [it, n.right()] } + [-1, 1]*.plus(n.right()).collect { [n.down(), it] }
-
-    adja.grep(onboard).collect { d, r ->
-        new Node(d, r, chars[d][r])
-    }.grep { Node it ->
-        n.ch() == it.ch()
+for (m in input) {
+//    force
+    def (fd, fr) = switch (m) {
+        case '^' -> [-1,0]
+        case 'v' -> [1,0]
+        case '<' -> [0,-1]
+        case '>' -> [0,1]
+        default -> assert false
     }
-}
-def traverser = Traverser.<Node>forGraph(successor)
-while (q) {
-    def item = q.first()
-    def connected = traverser.depthFirstPreOrder(item).toSet()
-    q.removeAll(connected)
-
-    def area = connected.size()
-    def perimeter = connected.sum { Node outer ->
-        4 - successor(outer).size()
-    }
-    acc += area*perimeter
+    push(rd, rr, fd, fr)
 }
 
-/* compute cost of fencing around regions
-* same character and neighbor then same region which determines area
-* cost for puzzle is
-* sum of cost for regions
-* cost region is area*perimeter
-* perimeter is sum over block neighbor different its a local property which sums over the group
-*
-* so all nodes to set
-* pull one, get reachable, subtract
-* loop
-*
-* have area, compute perimeter  */
-
-
+chars.eachWithIndex { char[] row, int d ->
+    row.eachWithIndex { char ch, int r ->
+        if (ch == 'O') acc += 100*d + r
+    }
+}
 
 System.out.withPrintWriter { pw ->
     pw.println(acc)
